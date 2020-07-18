@@ -1,1 +1,4 @@
 # Data and scripts for our paper will be made available here upon publication.
+
+Data deposition
+Data used in this paper are available in the National Center for Biotechnology Information (NCBI), https://www.ncbi.nlm.nih.gov. Raw reads were deposited under submission id: SUB6188969. SRAs are as follows: DNAseq datasets: SRR10011798, SRR10011802, SRR10011804, SRR10011805, SRR10011807–SRR10011810, SRR10011812–SRR10011814, SRR10011819, SRR10011825; PacBio dataset: SRR10011818; RNAseq datasets: SRR10011820-SRR10011823. MtDNA sequences for the COX I genes can be acceded form the following GeneBank accessions MG925538–MG925662, MG928281–MG928323, and MT329074–MT329592. Whole mtDNAs were deposited under accessions MG010647, MG010648, MG010649, MT528636, MT528637. The barnacle genome (Sbal3.1) is available at NCBI (accession no. VOPJ00000000). This GitHub repository contains code as well as  the supplementary datasets S1, S2, S3, S4, and S5.
