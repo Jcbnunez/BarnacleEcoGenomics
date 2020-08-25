@@ -23,20 +23,20 @@ JAVAMEM=80g
 # Pipeline programs # ######## ####### ######## do not change (unless for debug)
 #####################
 
-Identify_indels=~/data/S_balanoides_genomics_resources/Misc_resources/popoolation1/basic-pipeline/identify-genomic-indel-regions.pl
-Filter_pileup_by_GTF=~/data/S_balanoides_genomics_resources/Misc_resources/popoolation1/basic-pipeline/filter-pileup-by-gtf.pl
-Subsample_pileup=~/data/S_balanoides_genomics_resources/Misc_resources/popoolation1/basic-pipeline/subsample-pileup.pl
-Variance_sliding=~/data/S_balanoides_genomics_resources/Misc_resources/popoolation1/Variance-sliding.pl
+Identify_indels=.../popoolation1/basic-pipeline/identify-genomic-indel-regions.pl
+Filter_pileup_by_GTF=.../popoolation1/basic-pipeline/filter-pileup-by-gtf.pl
+Subsample_pileup=.../popoolation1/basic-pipeline/subsample-pileup.pl
+Variance_sliding=.../popoolation1/Variance-sliding.pl
 
 ###################
 # External files  #
 ###################
 
-Panel=~/data/S_balanoides_genomics_resources/Analyses/Zonation_Paper/0.Merged_bams_panel/Hodgsons_Panel.bam
+Panel=<file_in.bam>
 
 #Name of out files
-POP=ME
-pool_sizes=288
+POP=<pop_name>
+pool_sizes=<pool size>
 
 #####################
 # Script. Variables #
@@ -58,11 +58,11 @@ ZONATED_regions=~/data/S_balanoides_genomics_resources/Analyses/Zonation_Paper/7
 # Pipeline programs # ######## ####### ######## do not change (unless for debug)
 #####################
 
-Identify_indels=~/data/S_balanoides_genomics_resources/Misc_resources/popoolation1/basic-pipeline/identify-genomic-indel-regions.pl
-Filter_pileup_by_GTF=~/data/S_balanoides_genomics_resources/Misc_resources/popoolation1/basic-pipeline/filter-pileup-by-gtf.pl
-Subsample_pileup=~/data/S_balanoides_genomics_resources/Misc_resources/popoolation1/basic-pipeline/subsample-pileup.pl
-Variance_sliding=~/data/S_balanoides_genomics_resources/Misc_resources/popoolation1/Variance-sliding.pl
-Var_at_Pos=~/data/S_balanoides_genomics_resources/Misc_resources/popoolation1/Variance-at-position.pl
+Identify_indels=.../popoolation1/basic-pipeline/identify-genomic-indel-regions.pl
+Filter_pileup_by_GTF=.../popoolation1/basic-pipeline/filter-pileup-by-gtf.pl
+Subsample_pileup=.../popoolation1/basic-pipeline/subsample-pileup.pl
+Variance_sliding=.../popoolation1/Variance-sliding.pl
+Var_at_Pos=.../popoolation1/Variance-at-position.pl
  
 #################################
 
