@@ -1,0 +1,245 @@
+# April 28 2020
+# Barnacle ABBA-BABA
+
+###
+####2 INSTALLED D-SUITE
+###
+
+cd /users/jburley/MyModules
+
+module load gcc/8.3 zlib/1.2.11  
+
+$ git clone https://github.com/millanek/Dsuite.git
+$ cd Dsuite
+$ make
+
+# careful, there were some warnings eg:
+Dsuite_utils.h:381:29: warning: dynamic exception specifications are deprecated in C++11 [-Wdeprecated]
+     void calculateFinalDs() throw(const char*) {
+                             ^~~~~
+                             
+# test run the thing:
+
+DSUITE=/users/jburley/MyModules/Dsuite/Build/Dsuite
+
+###
+#### Merge the VCFs into a single VCF, only retaining biallelic sites. 
+###
+
+skipped, used Joaquin's merged VCF but, rename the VCF and the samples for simplicity.
+
+module load vcftools/0.1.16 bcftools/1.9 
+
+mv Data/Sbal_allSamples_ME_RI_ICE_NOR_UKW_WCAN.filter.SNPs.vcf Data/Sbal_allSamples.vcf
+
+# checked the order of the sample names using:
+cat Data/Sbal_allSamples.vcf | grep -v "##" | grep "#" | tr "\t" "\n"
+
+# made list of sample names:
+Data/sample_names.txt
+
+bcftools reheader -s Data/sample_names.txt -o Data/Sbal_allSamples.shortname.vcf Data/Sbal_allSamples.vcf
+
+# check it:
+cat Data/Sbal_allSamples.shortname.vcf | grep -v "##" | grep "#" | tr "\t" "\n"
+
+### 
+#### 4 Test run
+###
+
+# filter the VCF to get only 1 scaf:
+
+vcftools --vcf Data/Sbal_allSamples.shortname.vcf --chr scaffold11898 --recode --recode-INFO-all --out Data/Sbal_allSamples.scaffold11898
+
+$DSUITE Dtrios Data/Sbal_allSamples.scaffold11898.recode.vcf Data/SETS.txt -t Data/norway-iceland-maine.nwk
+
+# Let a full run go with all possible combos;
+
+$DSUITE Dtrios Data/Sbal_allSamples.shortname.vcf Data/SETS.txt -n Sbal_allSamples_allsites
+
+
+TREE:
+
+ME	Maine
+RI	RhodeIsland
+ICE	Iceland
+NOR	Norway
+UKW	UnitedKingdom
+WCAN	Outgroup
+
+((UnitedKingdom,Norway),((Iceland,Maine),RhodeIsland))
+
+##----------------------------------
+##----------------------------------
+## April 29: repeating with new VCF and streamlining the pipeline. 
+
+#!/bin/bash
+#SBATCH -J DSUITE
+#SBATCH -t 2:00:00
+#SBATCH -c 1
+#SBATCH --mem=20g
+#SBATCH -o Logs/DSUITE-%j.out
+#SBATCH -o Logs/DSUITE-%j.err
+#SBATCH --account=biomed-condo
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=john_burley@brown.edu
+
+##-------------
+## MODULES
+##-------------
+module load vcftools/0.1.16 bcftools/1.9 
+DSUITE=/users/jburley/MyModules/Dsuite/Build/Dsuite
+
+##-------------
+## ENVIRONMENT
+##-------------
+
+RUN=All_pops_Sbal_VCF.filter.99misd.maf5
+
+mkdir /users/jburley/scratch/Barnacle/ABBA/$RUN
+cd /users/jburley/scratch/Barnacle/ABBA/$RUN
+
+# note that the below vcf is gzipped, but lacks the .gz extension.
+cp -r ~/data-drand/S_balanoides_genomics_resources/bam_files/single_individuals_DNA/Merged_VCF_all/All_pops_Sbal_VCF.filter.99misd.maf5.SNPs.vcf .
+mv All_pops_Sbal_VCF.filter.99misd.maf5.SNPs.vcf All_pops_Sbal_VCF.filter.99misd.maf5.SNPs.vcf.gz
+gunzip  All_pops_Sbal_VCF.filter.99misd.maf5.SNPs.vcf.gz
+
+cp -r /users/jburley/data/jburley/Barnacle/Data/sample_names.txt .
+cp -r /users/jburley/data/jburley/Barnacle/Data/SETS.txt .
+cp -r /users/jburley/data/jburley/Barnacle/Data/Sbal.tree.nwk .
+
+
+##-------------
+## COMMANDS
+##-------------
+
+# 1. rename VCF using shorthand sample names
+
+bcftools reheader -s sample_names.txt -o Sbal_allSamples.vcf All_pops_Sbal_VCF.filter.99misd.maf5.SNPs.vcf
+
+# check this using:: cat Sbal_allSamples.vcf | grep -v "##" | grep "#" | tr "\t" "\n"
+# manual check required to make sure SETS.txt and sample_names.txt matc
+
+# 2. Run Dtrios
+$DSUITE Dtrios \
+	--tree Sbal.tree.nwk \
+	--run-name Sbal_allSamples_allsites \
+	Sbal_allSamples.vcf \
+	SETS.txt
+
+##-------------
+## THE END
+##-------------
+
+#!/bin/bash
+#SBATCH -J DSUITE_inv
+#SBATCH -t 10:00:00
+#SBATCH -c 1
+#SBATCH --mem=20g
+#SBATCH -o Logs/DSUITE_inv-%j.out
+#SBATCH -o Logs/DSUITE_inv-%j.err
+#SBATCH --account=biomed-condo
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=john_burley@brown.edu
+
+#### Assumes that Dtrios has been run in the same scratch dir as this script leads to
+
+##-------------
+## MODULES
+##-------------
+DSUITE=/users/jburley/MyModules/Dsuite/Build/Dsuite
+
+##-------------
+## ENVIRONMENT
+##-------------
+
+RUN=All_pops_Sbal_VCF.filter.99misd.maf5
+
+mkdir /users/jburley/scratch/Barnacle/ABBA/$RUN
+cd /users/jburley/scratch/Barnacle/ABBA/$RUN
+
+cp -r /users/jburley/data/jburley/Barnacle/Data/test_trios.txt .
+
+##-------------
+## COMMANDS
+##-------------
+
+$DSUITE Dinvestigate \
+	--run-name Sbal_allSamples_allsites \
+	--window=50,25 \
+	Sbal_allSamples.vcf \
+	SETS.txt \
+	test_trios.txt
+	
+## explanation:
+# --window=SIZE,STEP:	D, f_D, and f_dM statistics for windows containing SIZE useable SNPs, moving by STEP (default: 50,25)
+
+
+#######
+#### Results outline
+#######
+
+no differences between BBAA triplets and the correct tree (inferred by various methods).
+Shows that sister taxa share majority of derived alleles in all triplets.
+One difference between BBAA patterns and the D_min pattern (line 3).
+This shows that the D score is lower when you arrange the true topology ((Iceland,Maine),RhodeIsland), supported by BBAA pattern, as ((RI,ME)ICE)
+Taking this as an indication that something interesting is going on... this is in conflict with original assumption of ABBA-BABA (mmatschiner tutorial)
+
+
+
+$DSUITE Fbranch Sbal.tree.nwk SETS_Sbal_allSamples_allsites_tree.txt > Sbal_allSamples_allsites.fbranch.txt 
+
+python/3.6.8_gcc8.3  # seems to run with python v 3
+
+
+
+module load gcc/8.3 python/3.5.2 
+module load pandas/py_3.5.2 numpy/intel_1.15.1 
+
+python3 /users/jburley/MyModules/Dsuite/utils/dtools.py \
+	-n Sbal_allSamples_allsites \
+	--outgroup Canada \
+	Sbal_allSamples_allsites.fbranch.txt \
+	Sbal.tree.nwk
+	
+
+dtools.py [-h] [-n RUN_NAME] [--outgroup OUTGROUP] [--use_distances]
+                 [--ladderize]
+                 fbranch.txt tree.newick
+                 
+         
+makign a virtual env. notes on ccv web                 
+
+module load python/3.7.4                 
+cd /users/jburley/MyModules/Dsuite
+virtualenv dsuite.venv
+source dsuite.env/bin/activate
+
+# this makes a virtual env where I can pip install things required for this software
+
+# to get back into it:
+
+
+module load python/3.7.4
+# source bin/activate # use full path from slurm sript
+
+source ~/MyModules/Dsuite/dsuite.venv/bin/activate
+
+python ~/MyModules/Dsuite/dsuite.venv/Dsuite/utils/dtools.py \
+	-n Sbal_allSamples_allsites \
+	--outgroup Canada \
+	--ladderize \
+	Sbal_allSamples_allsites.fbranch.txt \
+	Sbal.tree.nwk
+
+Then run.
+
+
+###
+### plotting the D heatmap plot_d.rb
+###
+
+https://github.com/mmatschiner/tutorials/tree/master/analysis_of_introgression_with_snp_data
+
+ruby plot_d.rb SETS_Sbal_allSamples_allsites_Dmin.txt species_order.txt 0.25 samples_Sbal_allSamples_allsites_Dmin.svg
+ruby plot_d.rb SETS_Sbal_allSamples_allsites_BBAA.txt species_order.txt 0.25 samples_Sbal_allSamples_allsites_BBAA.svg
