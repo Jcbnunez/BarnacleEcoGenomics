@@ -1,4 +1,4 @@
-# plot results from DSUITE Dinvestigate: various D-stat scans across genome
+# plot results from DSUITE Dinvestigate: various D-stat (ABBABABA) scans across genome
 
 library(dplyr)
 library(ggplot2)

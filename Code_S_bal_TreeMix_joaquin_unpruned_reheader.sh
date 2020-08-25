@@ -4,6 +4,8 @@
 #SBATCH --mem=8GB
 #SBATCH -n 4
 
+# Code for Treemix reheader
+
 # # # # Load required software\
 module load bcftools/1.9
 module load tabix/0.2.6

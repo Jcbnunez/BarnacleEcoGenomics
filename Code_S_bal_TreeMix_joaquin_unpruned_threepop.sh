@@ -4,6 +4,8 @@
 #SBATCH --mem=32GB
 #SBATCH -n 4
 
+# code for threepop
+
 module load gsl/2.5
 module load boost/1.68
 module load plink/1.90

@@ -1,6 +1,8 @@
 #!/bin/R
 source("../treemix-1.13/src/plotting_funcs.R")
 
+# Treemix Plot
+
 # # # 
 pdf("../results/graphs/All_pops_Sbal_VCF.filter.99misd.maf5.SNPs.rehead_k100.treemix.0.admixgraph.pdf")
 plot_tree("../results/treemix/All_pops_Sbal_VCF.filter.99misd.maf5.SNPs.rehead_k100.treemix.0")

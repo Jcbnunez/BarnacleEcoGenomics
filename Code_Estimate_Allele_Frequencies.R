@@ -1,3 +1,6 @@
+#this R code will generate allele frequency files from SYNC files
+
+
 library(tidyverse) #ok
 library(gplots)
 library(magrittr)

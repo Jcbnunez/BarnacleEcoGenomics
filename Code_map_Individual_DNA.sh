@@ -2,6 +2,8 @@
 
 #########################################################
 
+# This is an example code to map reads to a reference -- individual DNA
+
 ####################
 #LOAD OSCAR MODULES#
 ####################

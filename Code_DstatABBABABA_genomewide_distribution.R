@@ -1,4 +1,4 @@
-# investigate distribution of D stats across scaffolds.
+# investigate distribution of D (ABBABABA) stats across scaffolds.
 
 # possible extension could be to merge this with genome annotation. compare coding vs non coding etc. 
 

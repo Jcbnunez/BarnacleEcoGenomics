@@ -7,6 +7,8 @@
 
 date
 
+# This is an example code to estimate FST in pool-seq data
+
 #Load Modules
 module load samtools/1.9
 

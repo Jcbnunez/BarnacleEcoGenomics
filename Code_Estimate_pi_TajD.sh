@@ -5,6 +5,8 @@
 #SBATCH --mem=90GB
 #SBATCH -t 90:00:00
 
+# This is an example code to estimate tajimas D and pi in poolp-seq data
+
 ################
 # Load Modules #
 ################

@@ -6,7 +6,8 @@
 #SBATCH -t 30:00:00
 
 #########################################################
-#########################################################
+
+# This is an example code to map reads to a reference -- individual RNA
 
 ##############
 #SYSTEM CHECK#

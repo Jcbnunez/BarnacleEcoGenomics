@@ -1,3 +1,5 @@
+# This is an example code to plot f3 statisitcs data
+
 library(tidyverse)
 
 a <- read_tsv("../reports/f3_statistics_k1000.txt")
